@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
+import plotly 
 import plotly.plotly as py
 import plotly.graph_objs as go
 import plotly.offline as py_offline
@@ -21,9 +22,7 @@ def to_usd(my_price):
 #
 #INFO INPUTS
 #
-
-import plotly 
-plotly.tools.set_credentials_file(username='sz745', api_key='5Bxn6nSI89uyyAkcjmKL')
+# plotly.tools.set_credentials_file(username='sz745', api_key='5Bxn6nSI89uyyAkcjmKL')
 
 api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
 #print(api_key)
@@ -157,5 +156,18 @@ trace = go.Candlestick(x=df['timestamp'],
                 low=df['low'],
                 close=df['close'])
 data = [trace]
-plotly.offline.plot(data, filename='data\candlestick.html')
 
+layout = go.Layout(
+    title=go.layout.Title(
+        text=f'{symbol} Candlestick Chart',
+        xref='paper',
+        x=0
+    ),
+)
+
+fig = go.Figure(data=data, layout=layout)
+candlestick_filepath = os.path.join(os.path.dirname(__file__), "..", "chart", "candlestick.html")
+plotly.offline.plot(fig, filename='candlestick.html')
+
+print(f"GENERATED CHART: {candlestick_filepath}")
+print("-------------------------")
